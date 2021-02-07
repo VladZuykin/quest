@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1049</width>
-    <height>735</height>
+    <height>803</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,8 +47,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="answerButton">
     <property name="geometry">
      <rect>
-      <x>880</x>
-      <y>670</y>
+      <x>930</x>
+      <y>740</y>
       <width>81</width>
       <height>31</height>
      </rect>

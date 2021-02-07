@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication
-from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
+from PyQt5.QtWidgets import QTableWidgetItem, QDoubleSpinBox, QAbstractSpinBox
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 import sys
@@ -71,7 +72,6 @@ class QuestWindow(QMainWindow):
             elif row == 6:
                 self.station = SeventhStation(self)
                 self.station.show()
-
 
 
 class FirstStation(QMainWindow):
@@ -200,6 +200,8 @@ class SixthStation(QMainWindow):
 
 
 class SeventhStation(QMainWindow):
+    ANSWERS = ((10, 11), (9, 10), (5, 6), (3, 4), (3, 4), (1, 2), (4, 5))
+
     def __init__(self, parent):
         super().__init__()
         uic.loadUi("SeventhTaskWindow.ui", self)
@@ -208,16 +210,43 @@ class SeventhStation(QMainWindow):
         self.answerButton.clicked.connect(self.check_answer)
 
     def check_answer(self):
-        pass
+        mark = 0
+        for num, spin_box in enumerate(self.spin_boxes):
+            if self.ANSWERS[num][0] <= spin_box.value() <= self.ANSWERS[num][1]:
+                mark += 1
+        item = QTableWidgetItem(str(mark))
+        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+        item.setBackground(QColor(10, 255, 10, 50))
+        self.parent.tableWidget.setItem(6, 1, item)
+        self.close()
 
     def init_ui(self):
-        pass
+        eifel_pixmap = QPixmap("img/EifelTower.png")
+        self.eifel_label = QLabel(self)
+        self.eifel_label.setGeometry(100, 200, 400, 500)
+        self.eifel_label.setPixmap(eifel_pixmap)
 
+        perm_pixmap = QPixmap("img/PermTower.png")
+        self.perm_label = QLabel(self)
+        self.perm_label.setGeometry(600, 200, 400, 500)
+        self.perm_label.setPixmap(perm_pixmap)
 
+        spin_boxes_coords = ((768, 248), (875, 410), (770, 457), (770, 531), (835, 531),
+                             (790, 579), (692, 668))
+
+        self.spin_boxes = []
+        for x, y in spin_boxes_coords:
+            spin_box = QDoubleSpinBox(self)
+            spin_box.setRange(0, 300)
+            spin_box.setButtonSymbols(QAbstractSpinBox.NoButtons)
+            spin_box.setGeometry(x, y, 30, 18)
+            spin_box.setFrame(False)
+            self.spin_boxes.append(spin_box)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = QuestWindow()
     window.show()
+
     sys.exit(app.exec())
