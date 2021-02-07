@@ -75,6 +75,9 @@ p, li { white-space: pre-wrap; }
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
        </widget>
       </item>
       <item>
@@ -106,7 +109,7 @@ p, li { white-space: pre-wrap; }
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="answerButton">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
