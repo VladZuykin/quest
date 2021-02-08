@@ -30,7 +30,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -84,7 +84,7 @@
              <bool>true</bool>
             </attribute>
             <attribute name="verticalHeaderVisible">
-             <bool>true</bool>
+             <bool>false</bool>
             </attribute>
             <attribute name="verticalHeaderHighlightSections">
              <bool>false</bool>
@@ -295,7 +295,7 @@ p, li { white-space: pre-wrap; }
            </font>
           </property>
           <property name="text">
-           <string>Соберите всю картинку, проходя станции</string>
+           <string>Соберите всю картинку, проходя станции (осталось 7)</string>
           </property>
           <property name="textFormat">
            <enum>Qt::AutoText</enum>

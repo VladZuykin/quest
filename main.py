@@ -92,6 +92,7 @@ class QuestWindow(QMainWindow):
     def set_pixmap(self, row):
         pixmap = self.res_pixmap.copy(*self.RECTS[row])
         self.LABELS[row].setPixmap(pixmap)
+        self.label.setText(f"Соберите всю картинку, проходя станции (осталось {self.stations_last})")
         if not self.stations_last:
             self.goButton.hide()
             self.tabWidget.setTabText(1, "Итоговое задание")
