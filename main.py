@@ -101,6 +101,7 @@ class QuestWindow(QMainWindow):
             self.answerButton.show()
             self.questionTextBrowser.show()
             self.label.hide()
+            self.label_8.hide()
 
     def choose_station(self):
         row = self.tableWidget.currentRow()
@@ -115,7 +116,7 @@ class QuestWindow(QMainWindow):
     def last_question_processing(self):
         answer = self.answerLineEdit.text().lower()
         three_hundred_str = {"трехсот", "трёхсот", "300", "тремста",
-                             "трёмста", "тремстам", "трёмстам"}
+                             "трёмста"}
         if "часы" in answer and \
                 any(map(lambda word: word in answer, three_hundred_str)):
             self.last_mark = 1
