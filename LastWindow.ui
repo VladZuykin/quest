@@ -68,7 +68,7 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a name=&quot;_x0000_t75&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'Times New Roman','serif'; font-size:14pt; font-weight:600;&quot;&gt;И&lt;/span&gt;&lt;span style=&quot; font-family:'Times New Roman','serif'; font-size:14pt; font-weight:600;&quot;&gt;нформационная справка. &lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman','serif'; font-size:14pt;&quot;&gt;«Часы обратного отсчета до 300-летия города Перми» были запущены 12 июня в городском сквере им. Татищева&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman','serif'; font-size:14pt;&quot;&gt;«Часы обратного отсчета до 300-летия города Перми» были запущены 12 июня в городском сквере им. Татищева.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman','serif'; font-size:14pt;&quot;&gt;Арт-объект представляет собой пятиметровую конструкцию, состоящую из экрана, на котором ведется обратный отсчет времени, и «водяного колеса». Подобное колесо стояло на плотине Егошихинского медеплавильного завода, основанного в 1723 году. Именно это время и считается годом основания Перми. Автором произведения является член Союза художников России, скульптор Рустам Исмагилов.&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman','serif'; font-size:14pt;&quot;&gt;Напомним, что 12 июня считается официальным днем рождения города Перми. В этом году праздник, посвященный 295-ой годовщине основания города, проходил под слоганом «Пермь — без пяти минут 300».&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
@@ -100,11 +100,11 @@ p, li { white-space: pre-wrap; }
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Expanding</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>10</width>
           <height>20</height>
          </size>
         </property>
@@ -135,11 +135,11 @@ p, li { white-space: pre-wrap; }
          <enum>Qt::Horizontal</enum>
         </property>
         <property name="sizeType">
-         <enum>QSizePolicy::Expanding</enum>
+         <enum>QSizePolicy::Fixed</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>10</width>
           <height>20</height>
          </size>
         </property>
