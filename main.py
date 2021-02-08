@@ -68,8 +68,14 @@ class QuestWindow(QMainWindow):
         for label in self.LABELS:
             label.setScaledContents(True)
 
+        self.answerLabel.hide()
+        self.answerLineEdit.hide()
+        self.answerButton.hide()
+        self.questionTextBrowser.hide()
+
         self.tableWidget.cellChanged.connect(self.check_and_edit)
         self.goButton.clicked.connect(self.choose_station)
+        self.answerButton.clicked.connect(self.last_question_processing)
 
     def check_and_edit(self, row, col):
         if col == 0 and row not in self.opened_cells_rows:
@@ -85,6 +91,13 @@ class QuestWindow(QMainWindow):
     def set_pixmap(self, row):
         pixmap = self.res_pixmap.copy(*self.RECTS[row])
         self.LABELS[row].setPixmap(pixmap)
+        if not self.stations_last:
+            self.tabWidget.setTabText(1, "Итоговое задание")
+            self.answerLabel.show()
+            self.answerLineEdit.show()
+            self.answerButton.show()
+            self.questionTextBrowser.show()
+            self.label.hide()
 
     def choose_station(self):
         row = self.tableWidget.currentRow()
@@ -95,6 +108,9 @@ class QuestWindow(QMainWindow):
 
                 self.station = self.STATIONS[row](self)
                 self.station.show()
+
+    def last_question_processing(self):
+        pass
 
 
 class FirstStation(QMainWindow):
