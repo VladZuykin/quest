@@ -37,8 +37,9 @@ class QuestWindow(QMainWindow):
         self.opened_cells_rows = set()
         self.station = None
         self.stations_last = 7
+        self.last_mark = 0
 
-        self.res_pixmap = QPixmap("img/Clock.png")
+        self.res_pixmap = QPixmap("img/ClockPainting.png")
 
         self.LABELS = (self.label_1, self.label_2, self.label_3, self.label_4,
                        self.label_5, self.label_6, self.label_7,)
@@ -92,6 +93,7 @@ class QuestWindow(QMainWindow):
         pixmap = self.res_pixmap.copy(*self.RECTS[row])
         self.LABELS[row].setPixmap(pixmap)
         if not self.stations_last:
+            self.goButton.hide()
             self.tabWidget.setTabText(1, "Итоговое задание")
             self.answerLabel.show()
             self.answerLineEdit.show()
@@ -110,7 +112,18 @@ class QuestWindow(QMainWindow):
                 self.station.show()
 
     def last_question_processing(self):
-        pass
+        answer = self.answerLineEdit.text().lower()
+        three_hundred_str = {"трехсот", "трёхсот", "300", "тремста",
+                             "трёмста", "тремстам", "трёмстам"}
+        if "часы" in answer and \
+                any(map(lambda word: word in answer, three_hundred_str)):
+            self.last_mark = 1
+            self.answerLineEdit.setText("«Часы обратного отсчета до 300-летия г.Перми»")
+
+        res_table_mark = sum([int(self.tableWidget.item(row, 1).text()) for row in range(7)])
+        self.last_window = ResultWindow(self.last_mark + res_table_mark)
+        self.last_window.show()
+        self.close()
 
 
 class FirstStation(QMainWindow):
@@ -210,9 +223,7 @@ class SixthStation(QMainWindow):
         mark = 0
         if self.spinBox.value() == 1886:
             mark += 1
-        if self.spinBox_1.value() == 1:
-            mark += 1
-        if self.spinBox_2.value() == 40:
+        if self.spinBox_1.value() == 1 and self.spinBox_2.value() == 40:
             mark += 1
 
         set_item(self.parent, mark, 5)
@@ -259,6 +270,20 @@ class SeventhStation(QMainWindow):
                 mark += 1
         set_item(self.parent, mark, 6)
         self.close()
+
+
+class ResultWindow(QMainWindow):
+    def __init__(self, result):
+        super().__init__()
+        uic.loadUi("LastWindow.ui", self)
+        self.result = result
+        self.init_ui()
+
+    def init_ui(self):
+        pixmap = QPixmap("img/ClockImage.png")
+        self.imageLabel.setPixmap(pixmap)
+
+        self.resultLabel.setText(f"Поздравляем! Ваш итоговый балл равен {self.result}!")
 
 
 if __name__ == '__main__':
