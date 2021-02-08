@@ -2,25 +2,59 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
 from PyQt5.QtWidgets import QTableWidgetItem, QDoubleSpinBox, QAbstractSpinBox
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRect
 from PyQt5.QtGui import QColor
 import sys
 from PyQt5 import uic
 
 
+def set_item(parent, element, row, col=1):
+    item = QTableWidgetItem(str(element))
+    item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+    item.setBackground(parent.CELL_COLOR)
+    parent.tableWidget.setItem(row, col, item)
+    parent.stations_last -= 1
+    parent.set_pixmap(row)
+    if parent.stations_last > 0:
+        parent.statusBar().showMessage(f"Добавлена часть картинки, осталось {parent.stations_last}.", 5000)
+    else:
+        parent.statusBar().showMessage("Вы собрали все части картинки.", 5000)
+
+
 class QuestWindow(QMainWindow):
-    STATION_NAMES = ["«Кама-река»", "«Счастье не за горами»", "«Пермяк - солёные уши»",
+    CELL_COLOR = QColor(10, 255, 10, 50)
+
+    STATION_NAMES = ("«Кама-река»", "«Счастье не за горами»", "«Пермяк - солёные уши»",
                      "«Легенда о пермском медведе»",
-                     "«Трус, Балбес и Бывалый»", "«Водопроводчик»", "«Эйфелева Башня»"]
-    ASSOCIATIONS = ["кам", "счасть", "пермяк", "медвед", "трус", "водопровод", "эйфел"]
+                     "«Трус, Балбес и Бывалый»", "«Водопроводчик»", "«Эйфелева Башня»")
+    ASSOCIATIONS = (("кам", ), ("счасть",), ("пермяк", "сол"), ("медвед", "мишк"),
+                    ("трус", "балбес", "бывалый"), ("водопровод",), ("эйфел",))
 
     def __init__(self):
         super().__init__()
         uic.loadUi("QuestMainWindow.ui", self)
 
         self.opened_cells_rows = set()
-        self.init_ui()
         self.station = None
+        self.stations_last = 7
+
+        self.res_pixmap = QPixmap("img/Clock.png")
+
+        self.LABELS = (self.label_1, self.label_2, self.label_3, self.label_4,
+                       self.label_5, self.label_6, self.label_7,)
+        self.STATIONS = (FirstStation, SecondStation, ThirdStation, FourthStation,
+                         FifthStation, SixthStation, SeventhStation)
+
+        title_size = self.res_pixmap.width() // 3, self.res_pixmap.height() // 3
+        self.RECTS = ((0, 0, *title_size),
+                      (title_size[0], 0, *title_size),
+                      (title_size[0] * 2, 0,  *title_size),
+                      (0, title_size[1], *title_size),
+                      (title_size[0], title_size[1], *title_size),
+                      (title_size[0] * 2, title_size[1], *title_size),
+                      (0, title_size[1] * 2, title_size[0] * 3, title_size[1]))
+
+        self.init_ui()
 
     def init_ui(self):
         header = self.tableWidget.horizontalHeader()
@@ -31,6 +65,9 @@ class QuestWindow(QMainWindow):
             item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
             self.tableWidget.setItem(i, 1, item)
 
+        for label in self.LABELS:
+            label.setScaledContents(True)
+
         self.tableWidget.cellChanged.connect(self.check_and_edit)
         self.goButton.clicked.connect(self.choose_station)
 
@@ -38,12 +75,16 @@ class QuestWindow(QMainWindow):
         if col == 0 and row not in self.opened_cells_rows:
             association = self.ASSOCIATIONS[row]
             cell_text = self.tableWidget.item(row, col).text()
-            if association in cell_text.lower():
+            if any(map(lambda x: x in cell_text.lower(), association)):
                 item = QTableWidgetItem(self.STATION_NAMES[row])
                 item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-                item.setBackground(QColor(10, 255, 10, 50))
+                item.setBackground(self.CELL_COLOR)
                 self.opened_cells_rows.add(row)
                 self.tableWidget.setItem(row, col, item)
+
+    def set_pixmap(self, row):
+        pixmap = self.res_pixmap.copy(*self.RECTS[row])
+        self.LABELS[row].setPixmap(pixmap)
 
     def choose_station(self):
         row = self.tableWidget.currentRow()
@@ -51,26 +92,8 @@ class QuestWindow(QMainWindow):
                 row in self.opened_cells_rows and \
                 self.tableWidget.selectedItems() and\
                 self.tableWidget.item(row, 1).text() == "":
-            if row == 0:
-                self.station = FirstStation(self)
-                self.station.show()
-            elif row == 1:
-                self.station = SecondStation(self)
-                self.station.show()
-            elif row == 2:
-                self.station = ThirdStation(self)
-                self.station.show()
-            elif row == 3:
-                self.station = FourthStation(self)
-                self.station.show()
-            elif row == 4:
-                self.station = FifthStation(self)
-                self.station.show()
-            elif row == 5:
-                self.station = SixthStation(self)
-                self.station.show()
-            elif row == 6:
-                self.station = SeventhStation(self)
+
+                self.station = self.STATIONS[row](self)
                 self.station.show()
 
 
@@ -87,11 +110,7 @@ class FirstStation(QMainWindow):
             mark += 1
         if self.secondAnswerSpinBox.value() == 3:
             mark += 1
-
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(0, 1, item)
+        set_item(self.parent, mark, 0)
         self.close()
 
 
@@ -107,13 +126,10 @@ class SecondStation(QMainWindow):
     def check_answer(self):
         mark = 0
         for i in range(8):
-            if self.tableWidget.item(1, i).text().lower() == self.ANSWERS[i]:
+            if self.tableWidget.item(1, i) and\
+                    self.tableWidget.item(1, i).text().lower() == self.ANSWERS[i]:
                 mark += 1
-
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(1, 1, item)
+        set_item(self.parent, mark, 1)
         self.close()
 
 
@@ -129,10 +145,7 @@ class ThirdStation(QMainWindow):
         if self.spinBox.value() == 60:
             mark = 1
 
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(2, 1, item)
+        set_item(self.parent, mark, 2)
         self.close()
 
 
@@ -148,10 +161,7 @@ class FourthStation(QMainWindow):
         if self.doubleSpinBox.value() == 2.5:
             mark = 1
 
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(3, 1, item)
+        set_item(self.parent, mark, 3)
         self.close()
 
 
@@ -169,10 +179,7 @@ class FifthStation(QMainWindow):
         if self.spinBox_1.value() == 955:
             mark += 1
 
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(4, 1, item)
+        set_item(self.parent, mark, 4)
         self.close()
 
 
@@ -192,10 +199,7 @@ class SixthStation(QMainWindow):
         if self.spinBox_2.value() == 40:
             mark += 1
 
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(5, 1, item)
+        set_item(self.parent, mark, 5)
         self.close()
 
 
@@ -208,17 +212,6 @@ class SeventhStation(QMainWindow):
         self.parent = parent
         self.init_ui()
         self.answerButton.clicked.connect(self.check_answer)
-
-    def check_answer(self):
-        mark = 0
-        for num, spin_box in enumerate(self.spin_boxes):
-            if self.ANSWERS[num][0] <= spin_box.value() <= self.ANSWERS[num][1]:
-                mark += 1
-        item = QTableWidgetItem(str(mark))
-        item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        item.setBackground(QColor(10, 255, 10, 50))
-        self.parent.tableWidget.setItem(6, 1, item)
-        self.close()
 
     def init_ui(self):
         eifel_pixmap = QPixmap("img/EifelTower.png")
@@ -242,6 +235,14 @@ class SeventhStation(QMainWindow):
             spin_box.setGeometry(x, y, 30, 18)
             spin_box.setFrame(False)
             self.spin_boxes.append(spin_box)
+
+    def check_answer(self):
+        mark = 0
+        for num, spin_box in enumerate(self.spin_boxes):
+            if self.ANSWERS[num][0] <= spin_box.value() <= self.ANSWERS[num][1]:
+                mark += 1
+        set_item(self.parent, mark, 6)
+        self.close()
 
 
 if __name__ == '__main__':
